@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etnombre"
+        android:hint="Nombre del vino"
+        android:layout_marginTop="26dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etdescri"
+        android:layout_below="@+id/etnombre"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="41dp"
+        android:hint="Descripcion del vino" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/etprecio"
+        android:layout_below="@+id/etdescri"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="44dp"
+        android:hint="Precio" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/etprecio"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="45dp">
+
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/etprecio"
+            android:layout_alignParentStart="false"
+            android:id="@+id/rb">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tinto"
+                android:id="@+id/rb1" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rosado"
+                android:id="@+id/rb2" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blanco"
+                android:id="@+id/rb3" />
+
+        </RadioGroup>
+    </LinearLayout>
+
+</RelativeLayout>

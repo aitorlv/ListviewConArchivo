@@ -9,19 +9,28 @@ import java.util.ArrayList;
  */
 public class MiArrayList <ArrayList>  {
 
-        private String nombre,descri, precio;
+        private String nombre,descri, precio,informacion;
         private Drawable img;
         private int idradiobuton;
-    public MiArrayList (String nombre, String descri, String precio, Drawable img,int idradiobutton) {
+    public MiArrayList (String nombre, String descri, String precio, String informacion, Drawable img,int idradiobutton) {
         this.nombre=nombre;
         this.descri=descri;
         this.precio=precio;
         this.img=img;
+        this.informacion=informacion;
         this.idradiobuton=idradiobutton;
     }
 
     public Drawable getImg() {
         return img;
+    }
+
+    public String getInformacion() {
+        return informacion;
+    }
+
+    public void setInformacion(String informacion) {
+        this.informacion = informacion;
     }
 
     public void setImg(Drawable img) {

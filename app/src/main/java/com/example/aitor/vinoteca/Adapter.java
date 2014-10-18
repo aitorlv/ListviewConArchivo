@@ -26,6 +26,7 @@ public class Adapter extends ArrayAdapter <MiArrayList> {
         public TextView tvnombre,tvdescri,tvprecio;
         public int posicion,idradiobutton;
         public ImageView img;
+        public String informacion;
     }
 
     public Adapter(Context context, int resource, ArrayList <MiArrayList> objects) {
@@ -48,6 +49,7 @@ public class Adapter extends ArrayAdapter <MiArrayList> {
            vh.tvnombre=(TextView) convertView.findViewById(R.id.Nombre);
         vh.tvdescri=(TextView) convertView.findViewById(R.id.descri);
         vh.tvprecio=(TextView) convertView.findViewById(R.id.precio);
+
             convertView.setTag(vh);
         }else{
 
@@ -60,8 +62,9 @@ public class Adapter extends ArrayAdapter <MiArrayList> {
         vh.img.setImageDrawable(obj.getImg());
         vh.tvnombre.setText(obj.getNombre()+"");
         vh.tvdescri.setText(obj.getDescri()+"");
-        vh.tvprecio.setText(obj.getPrecio()+"€");
+        vh.tvprecio.setText(obj.getPrecio()+"");
         vh.idradiobutton=obj.getIdradiobuton();
+        vh.informacion=obj.getInformacion();
         return convertView;
     }
 }

@@ -18,7 +18,7 @@
         android:id="@+id/etmoddescri"
         android:layout_below="@+id/etmodnombre"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="44dp"
         android:hint="Descripcion del vino" />
 
     <EditText
@@ -32,21 +32,39 @@
         android:layout_marginTop="44dp"
         android:hint="Precio" />
 
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/etmodprecio"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="44dp">
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etmodinformcaion"
+            android:layout_below="@+id/etmodprecio"
+            android:layout_alignParentStart="true"
+            android:hint="Informacion del vino " />
+    </ScrollView>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_marginTop="113dp"
         android:layout_below="@+id/etmodprecio"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="45dp">
+        android:layout_alignParentStart="true">
 
         <RadioGroup
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="185dp"
             android:layout_centerVertical="true"
             android:layout_below="@+id/etprecio"
             android:layout_alignParentStart="false"
-            android:id="@+id/rbmod">
+            android:id="@+id/rbmod"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:layout_width="wrap_content"

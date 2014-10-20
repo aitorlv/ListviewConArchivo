@@ -102,7 +102,7 @@ public class MyActivity extends Activity {
                 "lo que provoca una cierta acidez.",getResources().getDrawable(R.drawable.blanco)
                 ,2131230728);
 
-        MiArrayList objeto1 = new MiArrayList("Lambrusco","Italia","2e","El lambrusco es en primer lugar un tipo de vid con 40 variedades." +
+        MiArrayList objeto1 = new MiArrayList("Lambrusco","Italia","2€","El lambrusco es en primer lugar un tipo de vid con 40 variedades." +
                 "La variedad de uva y el vino Lambrusco se dan concretamente en las provincias de Módena, " +
                 "Bolonia, Parma, y Reggio Emilia.",getResources().getDrawable(R.drawable.rosado)
                 ,2131230729);

@@ -7,7 +7,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/etnombre"
-        android:hint="Nombre del vino"
+        android:hint="@string/nombre"
         android:layout_marginTop="26dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -19,7 +19,7 @@
         android:layout_below="@+id/etnombre"
         android:layout_alignParentStart="true"
         android:layout_marginTop="44dp"
-        android:hint="Descripcion del vino" />
+        android:hint="@string/descri" />
 
     <EditText
         android:layout_width="fill_parent"
@@ -30,7 +30,7 @@
         android:layout_below="@+id/etdescri"
         android:layout_alignParentStart="true"
         android:layout_marginTop="44dp"
-        android:hint="Precio" />
+        android:hint="@string/precio" />
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -44,7 +44,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/etinformacion"
-            android:hint=" Informacion del vino "
+            android:hint="@string/info"
             android:layout_below="@+id/etprecio"
             android:layout_alignParentStart="true" />
     </ScrollView>
@@ -68,21 +68,21 @@
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tinto"
+                android:text="@string/tinto"
                 android:id="@+id/rb1"
                 android:layout_gravity="center_horizontal" />
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Blanco"
+                android:text="@string/blanco"
                 android:id="@+id/rb3"
                 android:layout_gravity="right" />
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rosado"
+                android:text="@string/rosado"
                 android:id="@+id/rb2"
                 android:layout_gravity="left|center_horizontal" />
 

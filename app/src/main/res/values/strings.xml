@@ -6,5 +6,12 @@
     <string name="action_modificar">Modificar</string>
     <string name="action_borrar">Borrar</string>
     <string name="action_insertar">Nueva Entrada</string>
+    <string name="nombre">Nombre del vino </string>
+    <string name="descri">Descripcion el vino </string>
+    <string name="precio">Precio </string>
+    <string name="info">Informacio del vino </string>
+    <string name="tinto">Tinto</string>
+    <string name="blanco">Blanco </string>
+    <string name="rosado">Rosado </string>
 
 </resources>

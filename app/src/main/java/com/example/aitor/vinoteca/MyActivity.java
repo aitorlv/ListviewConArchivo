@@ -21,6 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class MyActivity extends Activity {
@@ -93,9 +96,23 @@ public class MyActivity extends Activity {
         // Drawable img=this.getResources().getDrawable(R.drawable.tinto);
 
 
-        MiArrayList objeto = new MiArrayList("ddd","ccc","1","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",getResources().getDrawable(R.drawable.tinto),2131230727);
+        MiArrayList objeto = new MiArrayList("Txacoli","Pais Vasco","5.45€","El chacolí (txakolin en euskera) es un vino blanco que se produce en el País Vasco," +
+                " con producciones menores en Cantabria y Burgos, " +
+                "e incluso en algunos lugares de Chile.Se elabora a partir de uvas verdes," +
+                "lo que provoca una cierta acidez.",getResources().getDrawable(R.drawable.blanco)
+                ,2131230728);
+
+        MiArrayList objeto1 = new MiArrayList("Lambrusco","Italia","2e","El lambrusco es en primer lugar un tipo de vid con 40 variedades." +
+                "La variedad de uva y el vino Lambrusco se dan concretamente en las provincias de Módena, " +
+                "Bolonia, Parma, y Reggio Emilia.",getResources().getDrawable(R.drawable.rosado)
+                ,2131230729);
+
+        MiArrayList objeto2 = new MiArrayList("Cerrojo","Granada","30€","El cerrojo es un vino tinto que se produce en Granada, se elabora a partir de " +
+                "las uvas Tempranillo, cabernet y garnacha tiene como denominacion de origen  Vino de la tierra altiplano de Sierra Nevada ",getResources().getDrawable(R.drawable.tinto)
+                ,2131230727);
         valores.add(objeto);
+        valores.add(objeto1);
+        valores.add(objeto2);
 
         final ListView lista = (ListView) findViewById(R.id.lista);;
         ad = new Adapter(this, R.layout.fila, valores);
@@ -143,13 +160,12 @@ public class MyActivity extends Activity {
 
         AlertDialog.Builder alert=new AlertDialog.Builder(this);
         LayoutInflater inflater=LayoutInflater.from(this);
-        final View view=inflater.inflate(R.layout.dialogoinsertar,null);
+        final View view=inflater.inflate(R.layout.dialogoinsertar, null);
         final EditText etnombre=(EditText)view.findViewById(R.id.etnombre);
         final EditText etdescri=(EditText)view.findViewById(R.id.etdescri);
         final EditText etprecio=(EditText)view.findViewById(R.id.etprecio);
         final EditText etinformacion=(EditText)view.findViewById(R.id.etinformacion);
         final RadioGroup  rb=(RadioGroup)view.findViewById(R.id.rb);
-        alert.setTitle("Insertar");
         alert.setView(view);
         alert.setCancelable(false);
 
@@ -182,7 +198,9 @@ public class MyActivity extends Activity {
                        obj = new MiArrayList(nombre, descri, precio,informacion, foto,idseleccionado);
                    }
                    valores.add(obj);
+                   Collections.sort(valores);
                    ad.notifyDataSetChanged();
+                   tostada("Datos insertados");
                }else{
                     tostada("Datos no validos ");
                }
@@ -194,13 +212,14 @@ public class MyActivity extends Activity {
 
     }
 
+
+
      // borrar item del listview
     public void borrarItem(final Adapter.ViewHolder vh){
         AlertDialog.Builder alert=new AlertDialog.Builder(this);
         LayoutInflater inflater=LayoutInflater.from(this);
         final View view=inflater.inflate(R.layout.dialogoborrar,null);
-        alert.setMessage("¿Borrar "+vh.tvnombre.getText()+" de la lista?");
-        alert.setTitle("Borrar");
+        alert.setMessage("¿Borrar " + vh.tvnombre.getText() + " de la lista?");
         alert.setView(view);
         //alert.setCancelable(false);
         alert.setPositiveButton("Aceptar",new DialogInterface.OnClickListener() {
@@ -208,6 +227,7 @@ public class MyActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 valores.remove(vh.posicion);
                 ad.notifyDataSetChanged();
+                tostada("Datos borrados");
             }
         });
         alert.setNegativeButton("Cancelar",null);
@@ -226,7 +246,6 @@ public class MyActivity extends Activity {
         LayoutInflater inflater= LayoutInflater.from(this);
         final View vista = inflater.inflate(R.layout.dialogomodificar, null);
         alert.setView(vista);
-        alert.setTitle("Modificar");
 
 
         etmod1 = (EditText) vista.findViewById(R.id.etmodnombre);
@@ -276,6 +295,7 @@ public class MyActivity extends Activity {
                             }
                             int index=vh.posicion;
                             valores.set(index,obj);
+                            Collections.sort(valores);
                             ad.notifyDataSetChanged();
                             tostada("datos modificados");
                         }else{

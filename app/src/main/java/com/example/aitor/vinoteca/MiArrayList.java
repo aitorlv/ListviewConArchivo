@@ -2,12 +2,14 @@ package com.example.aitor.vinoteca;
 
 import android.graphics.drawable.Drawable;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by aitor on 06/10/2014.
  */
-public class MiArrayList <ArrayList>  {
+public class MiArrayList <ArrayList>  implements Comparable<MiArrayList> {
 
         private String nombre,descri, precio,informacion;
         private Drawable img;
@@ -68,6 +70,16 @@ public class MiArrayList <ArrayList>  {
     public void setPrecio(String precio) {
         this.precio = precio;
     }
+
+
+
+        public int compareTo(MiArrayList vino) {
+            int ct1 = this.nombre.compareTo(vino.nombre);
+            if(ct1==0){
+                Collator coll = Collator.getInstance(Locale.getDefault());
+                ct1 = coll.compare(this.nombre, vino.nombre);
+            }
+            return ct1; }
 
 
 }

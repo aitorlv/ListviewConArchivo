@@ -69,19 +69,19 @@
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tinto"
+                android:text="@string/tinto"
                 android:id="@+id/rbmod1" />
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rosado"
+                android:text="@string/rosado"
                 android:id="@+id/rbmod2" />
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Blanco"
+                android:text="@string/blanco"
                 android:id="@+id/rbmod3" />
 
         </RadioGroup>

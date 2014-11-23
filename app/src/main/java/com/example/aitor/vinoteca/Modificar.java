@@ -30,9 +30,7 @@ public class Modificar extends Activity {
             v = b.getParcelable("vino");
             mostrarValores(v);
         }
-        if (savedInstanceState != null) {
 
-        }
 
     }
 

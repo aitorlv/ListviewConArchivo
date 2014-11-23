@@ -1,7 +1,6 @@
 package com.example.aitor.vinoteca;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by aitor on 05/10/2014.
  */
-public class Adapter extends ArrayAdapter <MiArrayList> {
+public class Adapter extends ArrayAdapter <Vino> {
 
         private Context contexto;
-        private ArrayList <MiArrayList> lista;
+        private ArrayList <Vino> lista;
         private int recurso;
         private static LayoutInflater inflater;
 
@@ -29,7 +27,7 @@ public class Adapter extends ArrayAdapter <MiArrayList> {
         public String informacion;
     }
 
-    public Adapter(Context context, int resource, ArrayList <MiArrayList> objects) {
+    public Adapter(Context context, int resource, ArrayList <Vino> objects) {
         super(context, resource, objects);
         this.contexto=context;
         this.lista=objects;
@@ -46,9 +44,9 @@ public class Adapter extends ArrayAdapter <MiArrayList> {
             convertView=inflater.inflate(recurso,null);
             vh=new ViewHolder();
             vh.img=(ImageView)convertView.findViewById(R.id.Image);
-           vh.tvnombre=(TextView) convertView.findViewById(R.id.Nombre);
-        vh.tvdescri=(TextView) convertView.findViewById(R.id.descri);
-        vh.tvprecio=(TextView) convertView.findViewById(R.id.precio);
+            vh.tvnombre=(TextView) convertView.findViewById(R.id.Nombre);
+            vh.tvdescri=(TextView) convertView.findViewById(R.id.descri);
+            vh.tvprecio=(TextView) convertView.findViewById(R.id.precio);
 
             convertView.setTag(vh);
         }else{
@@ -56,10 +54,17 @@ public class Adapter extends ArrayAdapter <MiArrayList> {
            vh=(ViewHolder)convertView.getTag();
         }
 
-        MiArrayList obj= (MiArrayList)getItem(position);
-       //Log.v("nobmre",obj.getNombre().toString()+"");
+        Vino obj= (Vino)getItem(position);
         vh.posicion=position;
-        vh.img.setImageDrawable(obj.getImg());
+        if(obj.getImg().compareTo("tinto")==0){
+            vh.img.setImageDrawable(contexto.getResources().getDrawable(R.drawable.tinto));
+        }else if(obj.getImg().compareTo("blanco")==0){
+            vh.img.setImageDrawable(contexto.getResources().getDrawable(R.drawable.blanco));
+        }else if(obj.getImg().compareTo("rosado")==0){
+            vh.img.setImageDrawable(contexto.getResources().getDrawable(R.drawable.rosado));
+        }else{
+            vh.img.setImageDrawable(contexto.getResources().getDrawable(R.drawable.vacio));
+        }
         vh.tvnombre.setText(obj.getNombre()+"");
         vh.tvdescri.setText(obj.getDescri()+"");
         vh.tvprecio.setText(obj.getPrecio()+"");

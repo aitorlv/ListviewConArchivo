@@ -13,5 +13,7 @@
     <string name="tinto">Tinto</string>
     <string name="blanco">Blanco </string>
     <string name="rosado">Rosado </string>
+    <string name="title_activity_modificar">Modificar</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

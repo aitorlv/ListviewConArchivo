@@ -3,8 +3,13 @@ package com.example.aitor.vinoteca;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcel;
+import android.util.Log;
+import android.util.Xml;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,31 +20,56 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 
 
 public class MyActivity extends Activity {
-    private ArrayList<MiArrayList> valores = new ArrayList<MiArrayList>();
+    private static final int MODIFICAR=1;
+    private ArrayList<Vino> valores = new ArrayList<Vino>();
     private Adapter ad;
+    private ListView lista;
+    private int indicemod;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
-
-
         inicializar();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        leerArchivo();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        guardarArchivo();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        leerArchivo();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,7 +85,10 @@ public class MyActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
       if (id == R.id.action_insertar) {
-            insertarItem();
+
+
+          //Vino vino=new Vino("nombre","descsri","precio","info","img",1);
+          insertarItem();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -74,6 +107,7 @@ public class MyActivity extends Activity {
 
 
         Object o = info.targetView.getTag();
+        //Vino vh=(Vino)o;
         Adapter.ViewHolder vh = (Adapter.ViewHolder) o;
 
 
@@ -81,42 +115,27 @@ public class MyActivity extends Activity {
             modificarItem(vh);
 
         } else if (id == R.id.action_borrar) {
-            //tostada(vh.tvnombre.getText().toString());
-            borrarItem(vh);
+            tostada(vh.tvnombre.getText().toString());
+           borrarItem(vh);
         }
         return super.onContextItemSelected(item);
 
     }
+
 
     /*--------------------------------------------mis metodos----------------------------------------------------*/
 
 
     //inicializamos el list view y lo mostramos
     public void inicializar() {
-        // Drawable img=this.getResources().getDrawable(R.drawable.tinto);
 
-
-        MiArrayList objeto = new MiArrayList("Txacoli","Pais Vasco","5.45€","El chacolí (txakolin en euskera) es un vino blanco que se produce en el País Vasco," +
-                " con producciones menores en Cantabria y Burgos, " +
-                "e incluso en algunos lugares de Chile.Se elabora a partir de uvas verdes," +
-                "lo que provoca una cierta acidez.",getResources().getDrawable(R.drawable.blanco)
-                ,2131230728);
-
-        MiArrayList objeto1 = new MiArrayList("Lambrusco","Italia","2€","El lambrusco es en primer lugar un tipo de vid con 40 variedades." +
-                "La variedad de uva y el vino Lambrusco se dan concretamente en las provincias de Módena, " +
-                "Bolonia, Parma, y Reggio Emilia.",getResources().getDrawable(R.drawable.rosado)
-                ,2131230729);
-
-        MiArrayList objeto2 = new MiArrayList("Cerrojo","Granada","30€","El cerrojo es un vino tinto que se produce en Granada, se elabora a partir de " +
-                "las uvas Tempranillo, cabernet y garnacha tiene como denominacion de origen  Vino de la tierra altiplano de Sierra Nevada ",getResources().getDrawable(R.drawable.tinto)
-                ,2131230727);
-        valores.add(objeto);
-        valores.add(objeto1);
-        valores.add(objeto2);
-
-        final ListView lista = (ListView) findViewById(R.id.lista);;
+        valores=leerArchivo();
+        Collections.sort(valores);
+        lista = (ListView) findViewById(R.id.lista);
         ad = new Adapter(this, R.layout.fila, valores);
         lista.setAdapter(ad);
+        ad.notifyDataSetChanged();
+
 
 
             lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -144,7 +163,15 @@ public class MyActivity extends Activity {
         tv1=(TextView)vista.findViewById(R.id.nombremen);
         tv2=(TextView)vista.findViewById(R.id.preciomen);
         info=(TextView)vista.findViewById(R.id.infomen);
-        img.setImageDrawable(valores.get(posicion).getImg());
+        if(valores.get(posicion).getImg().compareTo("tinto")==0) {
+            img.setImageDrawable(getResources().getDrawable(R.drawable.tinto));
+        }else if(valores.get(posicion).getImg().compareTo("rosado")==0){
+            img.setImageDrawable(getResources().getDrawable(R.drawable.rosado));
+        }else if(valores.get(posicion).getImg().compareTo("blanco")==0){
+            img.setImageDrawable(getResources().getDrawable(R.drawable.blanco));
+        }else{
+            img.setImageDrawable(getResources().getDrawable(R.drawable.vacio));
+        }
         tv1.setText(valores.get(posicion).getNombre());
         tv2.setText(valores.get(posicion).getPrecio());
         info.setText(valores.get(posicion).getInformacion());
@@ -155,7 +182,7 @@ public class MyActivity extends Activity {
     }
 
 
-        //metodo para insnertar valores en el listview
+    //metodo para insnertar valores en el listview
     public void insertarItem(){
 
         AlertDialog.Builder alert=new AlertDialog.Builder(this);
@@ -173,34 +200,39 @@ public class MyActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String nombre,descri,precio,informacion;
-                Drawable foto;
+                //Drawable foto;
 
-                MiArrayList obj;
+                Vino obj;
                 nombre=etnombre.getText().toString();
                 descri=etdescri.getText().toString();
                 precio=etprecio.getText().toString()+"€";
                 informacion=etinformacion.getText().toString();
                 int idseleccionado = rb.getCheckedRadioButtonId();
 
-               if(validarDatos(nombre,descri,precio,informacion)) {
-                   if (idseleccionado == 2131230727) {
-                       foto = view.getResources().getDrawable(R.drawable.tinto);
-                       obj = new MiArrayList(nombre, descri, precio,informacion, foto,idseleccionado);
+               if(Validar.validarDatos(nombre,descri,precio,informacion)) {
+                   if (idseleccionado == R.id.rb1) {
+                       String foto="tinto";
+                       obj = new Vino(nombre, descri, precio,informacion, foto,R.id.rb1);
 
-                   } else if (idseleccionado == 2131230729) {
-                       foto = view.getResources().getDrawable(R.drawable.rosado);
-                       obj = new MiArrayList(nombre, descri, precio,informacion, foto,idseleccionado);
-                   } else if (idseleccionado == 2131230728) {
-                       foto = view.getResources().getDrawable(R.drawable.blanco);
-                       obj = new MiArrayList(nombre, descri, precio,informacion, foto,idseleccionado);
+                   } else if (idseleccionado == R.id.rb2) {
+                       String foto="rosado";
+                       obj = new Vino(nombre, descri, precio,informacion, foto,R.id.rb2);
+                   } else if (idseleccionado == R.id.rb3) {
+                       String foto="blanco";
+                       obj = new Vino(nombre, descri, precio,informacion, foto,R.id.rb3);
                    } else {
-                       foto = view.getResources().getDrawable(R.drawable.vacio);
-                       obj = new MiArrayList(nombre, descri, precio,informacion, foto,idseleccionado);
+                       String foto="vacio";
+                       obj = new Vino(nombre, descri, precio,informacion, foto,idseleccionado);
                    }
-                   valores.add(obj);
-                   Collections.sort(valores);
-                   ad.notifyDataSetChanged();
-                   tostada("Datos insertados");
+                   if(!valores.contains(obj)){
+                     valores.add(obj);
+                     Collections.sort(valores);
+                     ad.notifyDataSetChanged();
+                     tostada("Datos insertados");
+                   }else{
+                     tostada("Ese vino ya existe");
+                   }
+
                }else{
                     tostada("Datos no validos ");
                }
@@ -212,6 +244,98 @@ public class MyActivity extends Activity {
 
     }
 
+    //Si tenemos permisos crea el archivo en la memoria
+    public void guardarArchivo(){
+        if(Validar.isModificable()) {
+            FileOutputStream fxml = null;
+            try {
+                fxml = new FileOutputStream(new File(getExternalFilesDir(null), "archivo.xml"));
+                XmlSerializer docxml = Xml.newSerializer();
+                docxml.setOutput(fxml, "UTF-8");
+                docxml.startDocument(null, Boolean.valueOf(true));
+                docxml.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+                docxml.startTag(null, "vinos");
+                for (int i = 0; i < valores.size(); i++) {
+                    Vino vino = (Vino) valores.get(i);
+                    docxml.startTag(null, "vino");
+                    docxml.startTag(null, "nombre");
+                    docxml.text(vino.getNombre());
+                    docxml.endTag(null, "nombre");
+                    docxml.startTag(null, "descripcion");
+                    docxml.text(vino.getDescri());
+                    docxml.endTag(null, "descripcion");
+                    docxml.startTag(null, "foto");
+                    docxml.text(vino.getImg());
+                    docxml.endTag(null, "foto");
+                    docxml.startTag(null, "informacion");
+                    docxml.text(vino.getInformacion());
+                    docxml.endTag(null, "informacion");
+                    docxml.startTag(null, "precio");
+                    docxml.text(vino.getPrecio());
+                    docxml.endTag(null, "precio");
+                    docxml.startTag(null, "idradio");
+                    docxml.text(vino.getIdradiobuton() + "");
+                    docxml.endTag(null, "idradio");
+                    docxml.endTag(null, "vino");
+                }
+                docxml.endDocument();
+                docxml.flush();
+                fxml.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    //si tenemos permisos lee el archivo creado anterioromente
+    public ArrayList<Vino> leerArchivo() {
+        if (Validar.isModificable()) {
+            String nombre = "", descri = "", img = "", info = "", pre = "", idradio = "";
+            int radio = 0;
+            ArrayList<Vino> valoresArchivo = new ArrayList<Vino>();
+            XmlPullParser leerxml = Xml.newPullParser();
+            try {
+                leerxml.setInput(new FileInputStream(new File(getExternalFilesDir(null), "archivo.xml")), "utf-8");
+                int evento = leerxml.getEventType();
+
+                while (evento != XmlPullParser.END_DOCUMENT) {
+                    if (evento == XmlPullParser.START_TAG) {
+                        String etiqueta = leerxml.getName();
+                        if (etiqueta.compareTo("nombre") == 0) {
+                            nombre = leerxml.nextText();
+                        } else if (etiqueta.compareTo("descripcion") == 0) {
+                            descri = leerxml.nextText();
+                        } else if (etiqueta.compareTo("foto") == 0) {
+                            img = leerxml.nextText();
+                        } else if (etiqueta.compareTo("informacion") == 0) {
+                            info = leerxml.nextText();
+                        } else if (etiqueta.compareTo("precio") == 0) {
+                            pre = leerxml.nextText();
+                        } else if (etiqueta.compareTo("idradio") == 0) {
+                            idradio = leerxml.nextText();
+                            radio = Integer.parseInt(idradio);
+                            valoresArchivo.add(new Vino(nombre, descri, pre, info, img, radio));
+                        }
+                    }
+                    evento = leerxml.next();
+
+                }
+
+
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return valoresArchivo;
+        }
+        tostada("Permisos no validos");
+        return null;
+    }
 
 
      // borrar item del listview
@@ -237,94 +361,44 @@ public class MyActivity extends Activity {
 
     }
 
-    public void modificarItem(final Adapter.ViewHolder vh){
 
+    public void modificarItem(Adapter.ViewHolder vh){
+        Intent i =new Intent(this,Modificar.class);
+        Bundle b=new Bundle();
+        indicemod=vh.posicion;
+        Vino v=(Vino)valores.get(vh.posicion);
+        b.putParcelable("vino",v);
+        i.putExtra("objetovino",b);
+        startActivityForResult(i,MODIFICAR);
+    }
 
-        final EditText etmod1,etmod2,etmod3,etmod4;
-        final  RadioGroup rgmod;
-        AlertDialog.Builder alert= new AlertDialog.Builder(this);
-        LayoutInflater inflater= LayoutInflater.from(this);
-        final View vista = inflater.inflate(R.layout.dialogomodificar, null);
-        alert.setView(vista);
-
-
-        etmod1 = (EditText) vista.findViewById(R.id.etmodnombre);
-        etmod2 = (EditText) vista.findViewById(R.id.etmoddescri);
-        etmod3 = (EditText) vista.findViewById(R.id.etmodprecio);
-        etmod4=(EditText)vista.findViewById(R.id.etmodinformcaion);
-        rgmod=(RadioGroup)vista.findViewById(R.id.rbmod);
-        etmod1.setText(vh.tvnombre.getText().toString());
-        etmod2.setText(vh.tvdescri.getText().toString());
-        etmod3.setText(vh.tvprecio.getText().toString());
-        etmod4.setText(vh.informacion);
-        if(vh.idradiobutton== 2131230727 || vh.idradiobutton== 2131230735){
-            rgmod.check(R.id.rbmod1);
-        }else if(vh.idradiobutton== 2131230729 || vh.idradiobutton== 2131230736){
-            rgmod.check(R.id.rbmod2);
-        }else if(vh.idradiobutton== 2131230728 || vh.idradiobutton== 2131230737){
-            rgmod.check(R.id.rbmod3);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==Activity.RESULT_OK){
+            switch (requestCode){
+                case MODIFICAR:
+                    Bundle b=data.getParcelableExtra("vino");
+                    Vino objmod=b.getParcelable("obj");
+                    if(!valores.contains(objmod)){
+                           valores.set(indicemod, objmod);
+                           Collections.sort(valores);
+                           ad.notifyDataSetChanged();
+                           tostada("datos modificados");
+                   }else{
+                      tostada("el vino ua existe");
+                   }
+            }
+        }else{
+            tostada("modificacion cancelada");
         }
-        alert.setPositiveButton("modificar",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String nombre,descri,precio,informacion;
-                        Drawable foto;
-                        MiArrayList obj;
-                        nombre=etmod1.getText().toString();
-                        descri=etmod2.getText().toString();
-                        precio=etmod3.getText().toString();
-                        informacion=etmod4.getText().toString();
-                        int idseleccionado = rgmod.getCheckedRadioButtonId();
-
-                        if(validarDatos(nombre,descri,precio,informacion)) {
 
 
-                            if (idseleccionado == 2131230735) {
-                                foto = vista.getResources().getDrawable(R.drawable.tinto);
-                                obj = new MiArrayList(nombre, descri, precio,informacion, foto,idseleccionado);
 
-                            } else if (idseleccionado == 2131230736) {
-                                foto = vista.getResources().getDrawable(R.drawable.rosado);
-                                obj = new MiArrayList(nombre, descri, precio,informacion, foto,idseleccionado);
-                            } else if (idseleccionado == 2131230737) {
-                                foto = vista.getResources().getDrawable(R.drawable.blanco);
-                                obj = new MiArrayList(nombre, descri, precio,informacion, foto,idseleccionado);
-                            } else {
-                                foto = vista.getResources().getDrawable(R.drawable.vacio);
-                                obj = new MiArrayList(nombre, descri, precio,informacion, foto,idseleccionado);
-                            }
-                            int index=vh.posicion;
-                            valores.set(index,obj);
-                            Collections.sort(valores);
-                            ad.notifyDataSetChanged();
-                            tostada("datos modificados");
-                        }else{
-                            tostada("Datos no validos ");
-                        }
-
-
-                    }
-                });
-        alert.setNegativeButton("cancelar",null);
-        alert.show();
 
     }
 
-        //valida los datos introducidos por el usuario
-    public boolean validarDatos(String nombre,String descri,String precio,String informacion){
-
-        nombre=nombre.trim();
-        descri=descri.trim();
-        precio=precio.trim();
-        informacion=informacion.trim();
-        if(nombre.length()>0 && descri.length()>0 && precio.length()>0 && informacion.length()>0)
-        return true;
-        else
-        return false;
-
-    }
-
-       //metodo usado para sacar mensajes
+    //metodo usado para sacar mensajes
     public void tostada(String msg){
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }

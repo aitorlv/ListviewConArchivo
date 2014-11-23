@@ -59,6 +59,7 @@ public class MyActivity extends Activity {
         leerArchivo();
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -135,19 +136,13 @@ public class MyActivity extends Activity {
         ad = new Adapter(this, R.layout.fila, valores);
         lista.setAdapter(ad);
         ad.notifyDataSetChanged();
-
-
-
-            lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    mostrarInformacion(position);
-
+                     mostrarInformacion(position);
                 }
-            });
+        });
         registerForContextMenu(lista);
-
     }
 
 
@@ -201,14 +196,12 @@ public class MyActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 String nombre,descri,precio,informacion;
                 //Drawable foto;
-
                 Vino obj;
                 nombre=etnombre.getText().toString();
                 descri=etdescri.getText().toString();
                 precio=etprecio.getText().toString()+"€";
                 informacion=etinformacion.getText().toString();
                 int idseleccionado = rb.getCheckedRadioButtonId();
-
                if(Validar.validarDatos(nombre,descri,precio,informacion)) {
                    if (idseleccionado == R.id.rb1) {
                        String foto="tinto";
@@ -319,7 +312,6 @@ public class MyActivity extends Activity {
                         }
                     }
                     evento = leerxml.next();
-
                 }
 
 
@@ -356,9 +348,6 @@ public class MyActivity extends Activity {
         });
         alert.setNegativeButton("Cancelar",null);
         alert.show();
-
-
-
     }
 
 
@@ -385,9 +374,10 @@ public class MyActivity extends Activity {
                            Collections.sort(valores);
                            ad.notifyDataSetChanged();
                            tostada("datos modificados");
-                   }else{
+                    }else{
                       tostada("el vino ua existe");
                    }
+                break;
             }
         }else{
             tostada("modificacion cancelada");

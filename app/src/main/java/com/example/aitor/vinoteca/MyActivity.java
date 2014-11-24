@@ -61,16 +61,12 @@ public class MyActivity extends Activity {
 
 
     @Override
-    protected void onPause() {
+    protected void onStop() {
         super.onPause();
         guardarArchivo();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        leerArchivo();
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
